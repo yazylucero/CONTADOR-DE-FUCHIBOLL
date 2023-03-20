@@ -1,0 +1,264 @@
+
+//pines de los botones
+
+#define PIN_INCREMENTO_EQUIPO1 36
+#define PIN_DECREMENTO_EQUIPO1 39
+#define PIN_INCREMENTO_EQUIPO2 35
+#define PIN_DECREMENTO_EQUIPO2 34
+
+//pines de los leds del display
+#define PIN_LED_A 22
+#define PIN_LED_B 13
+#define PIN_LED_C 33
+#define PIN_LED_D 14
+#define PIN_LED_E 27
+#define PIN_LED_F 19
+#define PIN_LED_G 25
+
+//marcador de el partido
+//inicia en 0
+int marcador_equipo1 = 0;
+int marcador_equipo2 = 0;
+
+
+//pin del buzzer 
+#define PIN_BUZZER 2
+
+//pines de los digitos de los equipos
+#define DIGITO_EQUIPO1 26
+#define DIGITO_EQUIPO2 21
+
+//pin de sensores de movimiento para los goles
+#define PIN_SENSOR_GOL_EQUIPO1 18
+#define PIN_SENSOR_GOL_EQUIPO2 4
+
+
+int tiempo_buzzer = 100 ; //tiempo de duracion del buzzer en mili segundos en mili segundos
+
+//variable para medir el tiempo actual
+int tiempo_actual ;
+
+//periodo de espera para el sensor de movimiento entre gol y gol
+int periodo_de_gol = 5000 ; 
+
+//arreglo de los pines de los leds del display
+int pin_leds[7] = {PIN_LED_A, PIN_LED_B, PIN_LED_C, PIN_LED_D, PIN_LED_E, PIN_LED_F, PIN_LED_G};
+
+//funcion que facilita la declaracion de los leds
+void asignacionPinesLed() {
+  for (int fila = 0; fila < 7; fila++) {
+    pinMode(pin_leds[fila], OUTPUT);
+  }
+}
+
+//declaracion de los pines de los botones
+void asignacioBotones() {
+  pinMode(PIN_INCREMENTO_EQUIPO1, INPUT);
+  pinMode(PIN_DECREMENTO_EQUIPO1, INPUT);
+  pinMode(PIN_INCREMENTO_EQUIPO2, INPUT);
+  pinMode(PIN_DECREMENTO_EQUIPO2, INPUT);
+}
+
+//asignacion de pines
+void setup() {
+  asignacionPinesLed();
+  asignacioBotones();
+  pinMode(DIGITO_EQUIPO1, OUTPUT);
+  pinMode(DIGITO_EQUIPO2, OUTPUT);
+  pinMode(PIN_BUZZER, OUTPUT);
+  pinMode(PIN_SENSOR_GOL_EQUIPO1, INPUT);
+  pinMode(PIN_SENSOR_GOL_EQUIPO2, INPUT);
+
+}
+
+//funcion para prender el buzzer
+void prender_buzzer() {
+  digitalWrite(PIN_BUZZER, HIGH);
+}
+
+//funcion para apagar el buzzer
+void apagar_buzzer() {
+  digitalWrite(PIN_BUZZER, LOW);
+
+}
+
+//funcion para mostrar los numeros en el display segun los parametros
+void numeros(int estadoA, int estadoB, int estadoC, int estadoD, int estadoE, int estadoF, int estadoG)
+{
+  digitalWrite(PIN_LED_A, estadoA);
+  digitalWrite(PIN_LED_B, estadoB);
+  digitalWrite(PIN_LED_C, estadoC);
+  digitalWrite(PIN_LED_D, estadoD);
+  digitalWrite(PIN_LED_E, estadoE);
+  digitalWrite(PIN_LED_F, estadoF);
+  digitalWrite(PIN_LED_G, estadoG);
+}
+
+//evaluamos que numero se muestra en el display
+//segun cuantos goles  
+//si son mas de 9 pasan a 0 
+//si son menos de 0 pasan a 9
+//marcador equipo 1
+
+void goles_equipo1( ) {
+  if (marcador_equipo1 > 9 ) {
+    marcador_equipo1 = 0;
+  }
+  if (marcador_equipo1 < 0) {
+    marcador_equipo1 = 9;
+  }
+  if (marcador_equipo1 == 0 ) {
+    numeros(LOW, LOW, LOW, LOW, LOW, LOW, HIGH) ;
+  }
+  else if (marcador_equipo1 == 1 ) {
+    numeros(HIGH, LOW, LOW, HIGH, HIGH, HIGH, HIGH);
+  }
+  else if (marcador_equipo1 == 2 ) {
+    numeros(LOW, LOW, HIGH, LOW, LOW, HIGH, LOW);
+  }
+  else if (marcador_equipo1 == 3 ) {
+    numeros(LOW, LOW, LOW, LOW, HIGH, HIGH, LOW);
+  }
+  else if (marcador_equipo1 == 4 ) {
+    numeros(HIGH, LOW, LOW, HIGH, HIGH, LOW, LOW);
+  }
+  else if (marcador_equipo1 == 5 ) {
+    numeros(LOW, HIGH, LOW, LOW, HIGH, LOW, LOW);
+  }
+  else if (marcador_equipo1 == 6 ) {
+    numeros(LOW, HIGH, LOW, LOW, LOW, LOW, LOW);
+  }
+  else if (marcador_equipo1 == 7 ) {
+    numeros(LOW, LOW, LOW, HIGH, HIGH, HIGH, HIGH);
+  }
+  else if (marcador_equipo1 == 8 ) {
+    numeros(LOW, LOW, LOW, LOW, LOW, LOW, LOW);
+  }
+  else if (marcador_equipo1 == 9 ) {
+    numeros(LOW, LOW, LOW, LOW, HIGH, LOW, LOW);
+  }
+
+}
+
+
+//evaluamos que numero se muestra en el display
+//segun cuantos goles  
+//si son mas de 9 pasan a 0 
+//si son menos de 0 pasan a 9
+//marcador equipo 2
+void goles_equipo2() {
+  
+
+  if (marcador_equipo2 > 9 ) {
+    marcador_equipo2 = 0;
+  }
+  if (marcador_equipo2 < 0) {
+    marcador_equipo2 = 9;
+  }
+  if (marcador_equipo2 == 0 ) {
+    numeros(LOW, LOW, LOW, LOW, LOW, LOW, HIGH) ;
+  }
+  else if (marcador_equipo2 == 1 ) {
+    numeros(HIGH, LOW, LOW, HIGH, HIGH, HIGH, HIGH);
+  }
+  else if (marcador_equipo2 == 2 ) {
+    numeros(LOW, LOW, HIGH, LOW, LOW, HIGH, LOW);
+  }
+  else if (marcador_equipo2 == 3 ) {
+    numeros(LOW, LOW, LOW, LOW, HIGH, HIGH, LOW);
+  }
+  else if (marcador_equipo2 == 4 ) {
+    numeros(HIGH, LOW, LOW, HIGH, HIGH, LOW, LOW);
+  }
+  else if (marcador_equipo2 == 5 ) {
+    numeros(LOW, HIGH, LOW, LOW, HIGH, LOW, LOW);
+  }
+  else if (marcador_equipo2 == 6 ) {
+    numeros(LOW, HIGH, LOW, LOW, LOW, LOW, LOW);
+  }
+  else if (marcador_equipo2 == 7 ) {
+    numeros(LOW, LOW, LOW, HIGH, HIGH, HIGH, HIGH);
+  }
+  else if (marcador_equipo2 == 8 ) {
+    numeros(LOW, LOW, LOW, LOW, LOW, LOW, LOW);
+  }
+  else if (marcador_equipo2 == 9 ) {
+    numeros(LOW, LOW, LOW, LOW, HIGH, LOW, LOW);
+  }
+}
+
+//mostramos los goles en el display
+void mostrar_goles() {
+  digitalWrite(DIGITO_EQUIPO1, LOW);
+  digitalWrite(DIGITO_EQUIPO2, HIGH);
+  goles_equipo1();
+
+  delay(500);
+  digitalWrite(DIGITO_EQUIPO1, HIGH);
+  digitalWrite(DIGITO_EQUIPO2, LOW);
+  goles_equipo2();
+
+  delay(500);
+}
+
+//leemos los botones y restamos o sumamos goles segun el boton
+void leer_botones() {
+  if (digitalRead(PIN_INCREMENTO_EQUIPO1)) {
+    marcador_equipo1++ ;
+    prender_buzzer();
+    delay(tiempo_buzzer);
+    apagar_buzzer();
+  } else if (digitalRead(PIN_DECREMENTO_EQUIPO1)) {
+    marcador_equipo1-- ;
+    prender_buzzer();
+    delay(tiempo_buzzer);
+    apagar_buzzer();
+  } else if (digitalRead(PIN_INCREMENTO_EQUIPO2)) {
+    marcador_equipo2++ ;
+    prender_buzzer();
+    delay(tiempo_buzzer);
+    apagar_buzzer();
+  } else if (digitalRead(PIN_DECREMENTO_EQUIPO2)) {
+    marcador_equipo2 -- ;
+    prender_buzzer();
+    delay(tiempo_buzzer);
+    apagar_buzzer();
+  }
+}
+
+//leemos los goles del sensor con un periodo de 5 segundos 
+//para sumar de un gol a la vez
+void leer_gol_equipo1() {
+  if (millis() > tiempo_actual + periodo_de_gol ) {
+    if (digitalRead(PIN_SENSOR_GOL_EQUIPO1)) {
+      marcador_equipo1++ ;
+      tiempo_actual = millis();
+      prender_buzzer();
+      delay(tiempo_buzzer);
+      apagar_buzzer();
+    }
+  }
+}
+
+//leemos los goles del sensor con un periodo de 5 segundos 
+//para sumar de un gol a la vez
+void leer_gol_equipo2() {
+
+  if (millis() > tiempo_actual + periodo_de_gol ) {
+    if (digitalRead(PIN_SENSOR_GOL_EQUIPO2)) {
+      marcador_equipo2++ ;
+      tiempo_actual = millis();
+      prender_buzzer();
+      delay(tiempo_buzzer);
+      apagar_buzzer();
+    }
+  }
+}
+
+//ejecutamos en el loop las distintas funcionalidades
+void loop() {
+  leer_botones();
+  leer_gol_equipo1();
+  leer_gol_equipo2();
+  mostrar_goles();
+}
